@@ -6,7 +6,7 @@
 
 
 
-# WENO framework
+# WENO framework (update test for ofdev)
 
 Weighted essentially non-oscillatory library for the framework of OpenFOAM.
 Detailed information about the theoretical background and the implementation can 
