@@ -27,7 +27,7 @@ Author
 
 \*---------------------------------------------------------------------------*/
 
-
+#include "codeRules.H"
 #include "globalfvMesh.H"
 #include "reconstructRegionalMesh.H"
 #include "meshSearch.H"
@@ -227,7 +227,11 @@ Foam::autoPtr<Foam::fvMesh> Foam::WENO::globalfvMesh::createGlobalMesh(const fvM
 
 Foam::autoPtr<Foam::fvMesh> Foam::WENO::globalfvMesh::createLocalMesh(const fvMesh& mesh)
 {
-    if (mesh.topoChanging())
+    #ifdef FOAM_NEW_TOPOCHANGE
+        if (mesh.topoChanged())
+    #else
+        if (mesh.topoChanging())
+    #endif
         FatalErrorInFunction << "Mesh cannot change topology if used with WENO scheme"
                              << exit(FatalError);
     if (mesh.moving())

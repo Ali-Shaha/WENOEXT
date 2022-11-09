@@ -516,33 +516,37 @@ void Foam::WENOUpwindFit<Type>::coupledRiemannSolver
                 }
             }
         }
-        else if (isA<cyclicAMIFvPatch>(patches[patchI]))
-        {
-            /*************************** NOTE *******************************
-            * Currently not used as it is not quite clear how 
-            * the interpolation will affect the results 
-            ****************************************************************/
-            //// If coupled the value at the face of the neighbour patch can be 
-            //// used.
-            //const scalarField& pFaceFlux =
-                //faceFlux_.boundaryField()[patchI];
+        #ifdef FOAM_NEW_TOPOCHANGE
+        #else
 
-            //const labelUList& pOwner = mesh.boundary()[patchI].faceCells();
+            else if (isA<cyclicAMIFvPatch>(patches[patchI]))
+            {
+                /*************************** NOTE *******************************
+                * Currently not used as it is not quite clear how 
+                * the interpolation will affect the results 
+                ****************************************************************/
+                //// If coupled the value at the face of the neighbour patch can be 
+                //// used.
+                //const scalarField& pFaceFlux =
+                    //faceFlux_.boundaryField()[patchI];
 
-            //forAll(pOwner, faceI)
-            //{
-                //const label neighbPatchID = refCast<const cyclicAMIFvPatch>
-                        //(patches[patchI]).neighbPatchID();
-                //// inerpolate results to patch neighbour field
-                //tmp<Field<Type>> interpField = refCast<const cyclicAMIFvPatch>
-                        //(patches[patchI]).interpolate(btsfUD[neighbPatchID]);
-                
-                //if (pFaceFlux[faceI] < 0)
+                //const labelUList& pOwner = mesh.boundary()[patchI].faceCells();
+
+                //forAll(pOwner, faceI)
                 //{
-                    //pSfCorr[faceI] = btsfP[neighbPatchID][faceI];
+                    //const label neighbPatchID = refCast<const cyclicAMIFvPatch>
+                            //(patches[patchI]).neighbPatchID();
+                    //// inerpolate results to patch neighbour field
+                    //tmp<Field<Type>> interpField = refCast<const cyclicAMIFvPatch>
+                            //(patches[patchI]).interpolate(btsfUD[neighbPatchID]);
+                    
+                    //if (pFaceFlux[faceI] < 0)
+                    //{
+                        //pSfCorr[faceI] = btsfP[neighbPatchID][faceI];
+                    //}
                 //}
-            //}
-        }
+            }
+        #endif
     }
 }
 

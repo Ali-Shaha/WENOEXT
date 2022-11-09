@@ -518,6 +518,8 @@ void Foam::WENOUpwindFit01<Type>::coupledRiemannSolver
                 }
             }
         }
+        #ifdef FOAM_NEW_TOPOCHANGE
+        #else
         else if (isA<cyclicAMIFvPatch>(patches[patchI]))
         {
             /*************************** NOTE *******************************
@@ -545,6 +547,7 @@ void Foam::WENOUpwindFit01<Type>::coupledRiemannSolver
                 //}
             //}
         }
+        #endif
     }
 }
 

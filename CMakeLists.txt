@@ -148,22 +148,27 @@ message("-------------------------------------------------------------------")
 
 # Check the OpenFOAM version and set the correct include statements
 string(REGEX MATCH "([0-9]+)" _ $ENV{WM_PROJECT_VERSION})
-set(OF_VERSION_NUMBER ${CMAKE_MATCH_1})
-
+if($ENV{WM_PROJECT_VERSION} STREQUAL "dev")
+    set(OF_VERSION_NUMBER 10)
+    message("OpenFoam-dev detected, version set to ${OF_VERSION_NUMBER}")
+else()
+    string(REGEX MATCH "([0-9]+)" _ $ENV{WM_PROJECT_VERSION})
+    set(OF_VERSION_NUMBER ${CMAKE_MATCH_1})
+endif()
 # If VERSION > 1000 then it is a OpenFOAM.com (ESI) version
 # In OpenFOAM (ESI) the triSurface is moved into the surfaceMesh 
 # Note: The if() statement evaluates a set variable to true if no
 # $-Sign is used. For the cmakedefine statement this means that all set 
 # variables are resolved as true
-if (${OF_VERSION_NUMBER} GREATER_EQUAL 1000)
-    SET(OF_FORK_ESI true BOOL "OpenFOAM Fork: ESI")
-    SET(OF_FORK_VERSION ${OF_VERSION_NUMBER})
-    message("OF_VERSION: ${OF_FORK_VERSION}")
-else()
+# if (${OF_VERSION_NUMBER} GREATER_EQUAL 1000)
+#     SET(OF_FORK_ESI true BOOL "OpenFOAM Fork: ESI")
+#     SET(OF_FORK_VERSION ${OF_VERSION_NUMBER})
+#     message("OF_VERSION: ${OF_FORK_VERSION}")
+# else()
     SET(OF_FORK_ORG true BOOL "OpenFOAM Fork: Org")
     SET(OF_FORK_VERSION ${OF_VERSION_NUMBER})
     message("OF_VERSION: ${OF_FORK_VERSION}")
-endif()
+# endif()
 
 
 
@@ -182,13 +187,13 @@ install(FILES ${CMAKE_BINARY_DIR}/generated/codeRules.H
 
 # If VERSION > 1000 then it is a OpenFOAM.com (ESI) version
 # In OpenFOAM (ESI) the triSurface is moved into the surfaceMesh 
-if (${OF_VERSION_NUMBER} GREATER_EQUAL 1000)
-    SET(TRISURFACE_INC)
-    SET(TRISURFACE_LIB)
-else()
+# if (${OF_VERSION_NUMBER} GREATER_EQUAL 1000)
+#     SET(TRISURFACE_INC)
+#     SET(TRISURFACE_LIB)
+# else()
     SET(TRISURFACE_INC "$ENV{FOAM_SRC}/triSurface/lnInclude")
     SET(TRISURFACE_LIB "-ltriSurface")
-endif()
+# endif()
 
 
 
@@ -230,7 +235,7 @@ add_subdirectory(utilities)
 
 message("\n-------------------------------------------------------------------") 
 message("\tBuild State")
-message("-------------------------------------------------------------------")
+message("-------------------------------------------------------------------${OF_FORK_VERSION}")
 if (CMAKE_BUILD_TYPE)
     message("Built state is: ${CMAKE_BUILD_TYPE}")
 else()
@@ -245,7 +250,7 @@ if (build_type_upper STREQUAL "RELEASE")
 else()
     message("Building tests")
     message("This can be deactivated by using CMAKE_BUILD_TYPE=Release")
-    add_subdirectory(tests)
+    # add_subdirectory(tests)
 endif()
 message("-------------------------------------------------------------------\n")
 

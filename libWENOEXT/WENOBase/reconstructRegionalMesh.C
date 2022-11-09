@@ -27,6 +27,7 @@ Author
 
 \*---------------------------------------------------------------------------*/
 
+#include "codeRules.H"
 #include "reconstructRegionalMesh.H"
 #include "masterUncollatedFileOperation.H"
 
@@ -158,8 +159,28 @@ Foam::autoPtr<Foam::fvMesh> Foam::reconstructRegionalMesh::reconstruct
         }
 
         meshToAdd.addPatches(patches,false);
+    #ifdef FOAM_NEW_TOPOCHANGE
+    DynamicList<label> masterFaces
+    (
+        masterMesh->nFaces() - masterMesh->nInternalFaces()
+    );
+    DynamicList<label> addFaces
+    (
+        meshToAdd.nFaces() - meshToAdd.nInternalFaces()
+    );
 
+        autoPtr<faceCoupleInfo> couples
+        (
+            new faceCoupleInfo
+            (
+                *masterMesh,
+                masterFaces,
+                meshToAdd,
+                addFaces
+            )
+        );
 
+    #else
         // Find geometrically shared points/faces.
         autoPtr<faceCoupleInfo> couples
         (
@@ -171,6 +192,14 @@ Foam::autoPtr<Foam::fvMesh> Foam::reconstructRegionalMesh::reconstruct
                 true            // Matching faces identical
             )
         );
+
+    #endif
+
+
+
+
+
+
 
         // Add elements to mesh
         autoPtr<mapAddedPolyMesh> map = add

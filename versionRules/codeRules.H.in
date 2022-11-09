@@ -80,6 +80,9 @@ Contributors/Copyright:
     #define FOAM_NEW_COUPLED_PATCHES
 #endif
 
+#if (defined(OF_FORK_ORG) && OF_FORK_VERSION >= 10)
+    #define FOAM_NEW_TOPOCHANGE
+#endif
 
 
 #endif
