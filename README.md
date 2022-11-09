@@ -6,8 +6,12 @@
 
 
 
-# WENO framework (update test for ofdev)
+# WENO framework 
 
+**Current Changes:** 
+- Quick patch for OF-dev 
+- check [versionRules](https://github.com/Ali-Shaha/WENOEXT/blob/master/versionRules/codeRules.H.in)
+---
 Weighted essentially non-oscillatory library for the framework of OpenFOAM.
 Detailed information about the theoretical background and the implementation can 
 be found in:
